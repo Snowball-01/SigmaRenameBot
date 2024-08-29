@@ -41,6 +41,8 @@
 start - Bot Alive Cheking
 my_plan - Check Your Current Plan
 upgrade - Buy Premium
+startsequence - Use the command to begin a file sequencing process
+endsequence - When you're done, Use to finish and grt the sequence ready
 view_thumb - View Thumbnail
 del_thumb - Delete Thumbnail
 set_caption - Set A Custom Caption
