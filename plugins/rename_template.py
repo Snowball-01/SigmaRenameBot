@@ -90,7 +90,7 @@ async def getformats(client: Client, message: Message):
         return await message.reply_text("**You haven't saved any formats yet. 😑**")
 
     saved = ""
-    
+
     for index, (key, value) in enumerate(template.items()):
 
         try:
@@ -115,7 +115,9 @@ async def delformats(client: Client, message: Message):
 
     if len(message.command) == 1:
         await db.remove_rename_template(user_id)
-        return await message.reply_text("**All Formats Deleted Successfully ✅**")
+        return await message.reply_text(
+            "**All Formats Deleted Successfully ✅**\n\n** To Delete Specific Format send `/delformat {Trigger Word}` **"
+        )
 
     else:
         await db.remove_rename_template(user_id, message.command[1])
