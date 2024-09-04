@@ -58,6 +58,12 @@
         "description": "Your Mongo DB URL Obtained From mongodb.com",
         "value": "",
         "required": true
+      },
+  
+      "DB_NAME": {
+        "description": "Your Mongo DB Cluster Name",
+        "value": "",
+        "required": true
       }
     }
   }

@@ -45,7 +45,7 @@ class Database:
                 prefix=None,  # Add this line for the prefix
                 suffix=None,  # Add this line for the suffix
                 metadata=False,  # Add this line for the metadata
-                rename_template=None,  # Add this line for the rename template
+                rename_template={},  # Add this line for the rename template
                 metadata_code=""" -map 0 -c:s copy -c:a copy -c:v copy -metadata title="Powered By:- @Kdramaland" -metadata author="@Snowball_Official" -metadata:s:s title="Subtitled By :- @Kdramaland" -metadata:s:a title="By :- @Kdramaland" -metadata:s:v title="By:- @Snowball_Official" """,  # Add this line for the metadata code
             )
 
