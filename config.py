@@ -1,31 +1,28 @@
 import re, os, time
 id_pattern = re.compile(r'^.\d+$') 
-from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv(dotenv_path='sample.env')
 
 
 class Config(object):
     # pyro client config
-    API_ID    = os.getenv("API_ID", "") # ⚠️ Required
-    API_HASH  = os.getenv("API_HASH", "") # ⚠️ Required
-    BOT_TOKEN = os.getenv("BOT_TOKEN", "") # ⚠️ Required
+    API_ID    = os.environ.get("API_ID", "21288218") # ⚠️ Required
+    API_HASH  = os.environ.get("API_HASH", "dd47d5c4fbc31534aa764ef9918b3acd") # ⚠️ Required
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "7074407315:AAFOkLHpxoHUuwX8_6-KIy6vCrnSQvnTAGA") # ⚠️ Required
 
     # database config
-    DB_NAME = os.getenv("DB_NAME","SigmaRename")     
-    DB_URL  = os.getenv("DB_URL","") # ⚠️ Required
+    DB_NAME = os.environ.get("DB_NAME","TzingBot")     
+    DB_URL  = os.environ.get("DB_URL","mongodb://localhost:27017") # ⚠️ Required
  
     # other configs
     BOT_UPTIME  = time.time()
-    PICS = os.getenv("PICS", "https://telegra.ph/file/13c2745dcd19887d76812.jpg https://telegra.ph/file/e170c2bc5c1429e65f1ca.jpg https://telegra.ph/file/c65f5b8efd59c929b1e8b.jpg https://telegra.ph/file/8fcb3154d71285cd7af20.jpg https://telegra.ph/file/099ad55fdc723a058e12f.jpg https://telegra.ph/file/8977b1767518b6bf31312.jpg https://telegra.ph/file/52d7fc0a599a2c9b521bd.jpg").split()
-    ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.getenv('ADMIN', '').split()] # ⚠️ Required
-    FORCE_SUB   = os.getenv("FORCE_SUB", "") # ⚠️ Required Username without @
-    LOG_CHANNEL = int(os.getenv("LOG_CHANNEL", "")) # ⚠️ Required must start with (-100)
-    PREMIUM = os.getenv("PREMIUM", True)
+    PICS = os.environ.get("PICS", "https://telegra.ph/file/13c2745dcd19887d76812.jpg https://telegra.ph/file/e170c2bc5c1429e65f1ca.jpg https://telegra.ph/file/c65f5b8efd59c929b1e8b.jpg https://telegra.ph/file/8fcb3154d71285cd7af20.jpg https://telegra.ph/file/099ad55fdc723a058e12f.jpg https://telegra.ph/file/8977b1767518b6bf31312.jpg https://telegra.ph/file/52d7fc0a599a2c9b521bd.jpg").split()
+    ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6065594762').split()] # ⚠️ Required
+    FORCE_SUB   = os.environ.get("FORCE_SUB", "Kdramaland") # ⚠️ Required Username without @
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1001971176803")) # ⚠️ Required must start with (-100)
+    PREMIUM = os.environ.get("PREMIUM", True)
     
     # wes response configuration     
-    WEBHOOK = os.getenv("WEBHOOK", False)
+    WEBHOOK = os.environ.get("WEBHOOK", False)
 
 
 class Txt(object):

@@ -1,8 +1,14 @@
 import asyncio
 import random
+import sys
 from pyrogram import Client, filters
 from pyrogram.errors import FloodWait
-from pyrogram.types import InputMediaDocument, Message, InlineKeyboardButton, InlineKeyboardMarkup
+from pyrogram.types import (
+    InputMediaDocument,
+    Message,
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+)
 from PIL import Image
 from datetime import datetime
 from hachoir.metadata import extractMetadata
@@ -166,20 +172,28 @@ print(f"Extracted Episode Number: {episode_number}")
     & filters.create(is_autorename)
 )
 async def auto_rename_files(client, message):
+
     user_id = message.from_user.id
-    firstname = message.from_user.first_name
+    target_channel = None
     format_template = await db.get_format_template(user_id)
+    rename_template = await db.get_rename_templates(user_id)
     media_preference = await db.get_media_preference(user_id)
-    
+
     user_status = await db.get_user_status(user_id)
 
-    if user_status["plan"] == "free" and user_id not in Config.ADMIN and Config.PREMIUM:
+    if (
+        user_status["plan"] == "free"
+        and user_id not in Config.ADMIN
+        and Config.PREMIUM
+    ):
         return await message.reply_text(
             "**⚠️ ᴋɪɴᴅʟʏ ᴜᴘɢʀᴀᴅᴇ ᴛᴏ ᴘʀᴇᴍɪᴜᴍ ᴛᴏ ᴀᴜᴛᴏ ʀᴇᴀɴᴍᴇ**\n\nᴛᴏ ᴄʜᴇᴄᴋ ʏᴏᴜʀ ᴘʟᴀɴ ᴜsᴇ ᴛʜɪs ᴄᴏᴍᴍᴀɴᴅ /my_plan",
-            reply_markup=InlineKeyboardMarkup([[InlineKeyboardButton("ᴜᴘɢʀᴀᴅᴇ ᴘʟᴀɴ", callback_data="upgrade")]]),
+            reply_markup=InlineKeyboardMarkup(
+                [[InlineKeyboardButton("ᴜᴘɢʀᴀᴅᴇ ᴘʟᴀɴ", callback_data="upgrade")]]
+            ),
         )
 
-    if not format_template:
+    if not format_template and not rename_template:
         return await message.reply_text(
             "Please Set An Auto Rename Format First Using /autorename"
         )
@@ -207,6 +221,29 @@ async def auto_rename_files(client, message):
         return await message.reply_text("Unsupported File Type")
 
     print(f"Original File Name: {file_name}")
+
+    if rename_template:
+
+        trigger = [keys.lower() for keys in rename_template.keys()]
+        trigger_word = [word for word in trigger if word in file_name.lower()][0]
+
+        if not trigger_word:
+            trigger_word = None
+
+        print("Trigger Word: ", trigger_word)
+
+        format_template = next(
+            (
+                rename_template[key]
+                for key in rename_template
+                if key.lower() == trigger_word
+            ),
+            None,
+        )
+        target_channel = format_template[1]
+        format_template = format_template[0]
+        print("Format Template: ", format_template)
+        print("Channel : ", target_channel)
 
     # Check whether the file is already being renamed or has been renamed recently
     if file_id in renaming_operations:
@@ -286,7 +323,9 @@ async def auto_rename_files(client, message):
                 cmd = f"""ffmpeg -i "{path}" {metadata} "{metadata_path}" """
 
                 process = await asyncio.create_subprocess_shell(
-                    cmd, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE
+                    cmd,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
                 )
 
                 stdout, stderr = await process.communicate()
@@ -294,7 +333,9 @@ async def auto_rename_files(client, message):
 
                 try:
                     if er:
-                        await download_msg.edit(f"Error occurred:\n\n{er}\n\n**Error**")
+                        await download_msg.edit(
+                            f"Error occurred:\n\n{er}\n\n**Error**"
+                        )
                         os.remove(path)
                         os.remove(metadata_path)
                         return
@@ -389,7 +430,9 @@ async def auto_rename_files(client, message):
                     from_chat = filw.chat.id
                     mg_id = filw.id
                     time.sleep(2)
-                    await client.copy_message(message.from_user.id, from_chat, mg_id)
+                    await client.copy_message(
+                        message.from_user.id, from_chat, mg_id
+                    )
                     await upload_msg.delete()
                     await client.delete_messages(from_chat, mg_id)
 
@@ -413,7 +456,9 @@ async def auto_rename_files(client, message):
                     from_chat = filw.chat.id
                     mg_id = filw.id
                     time.sleep(2)
-                    await client.copy_message(message.from_user.id, from_chat, mg_id)
+                    await client.copy_message(
+                        message.from_user.id, from_chat, mg_id
+                    )
                     await upload_msg.delete()
                     await client.delete_messages(from_chat, mg_id)
                 elif type == "audio":
@@ -434,7 +479,9 @@ async def auto_rename_files(client, message):
                     from_chat = filw.chat.id
                     mg_id = filw.id
                     time.sleep(2)
-                    await client.copy_message(message.from_user.id, from_chat, mg_id)
+                    await client.copy_message(
+                        message.from_user.id, from_chat, mg_id
+                    )
                     await upload_msg.delete()
                     await client.delete_messages(from_chat, mg_id)
 
@@ -453,7 +500,7 @@ async def auto_rename_files(client, message):
             try:
                 if type == "document":
                     await client.send_document(
-                        message.chat.id,
+                        int(target_channel) if target_channel else message.chat.id,
                         document=file_path,
                         thumb=ph_path,
                         caption=caption,
@@ -466,7 +513,7 @@ async def auto_rename_files(client, message):
                     )
                 elif type == "video":
                     await client.send_video(
-                        message.chat.id,
+                        int(target_channel) if target_channel else message.chat.id,
                         video=file_path,
                         caption=caption,
                         thumb=ph_path,
@@ -480,7 +527,7 @@ async def auto_rename_files(client, message):
                     )
                 elif type == "audio":
                     await client.send_audio(
-                        message.chat.id,
+                        int(target_channel) if target_channel else message.chat.id,
                         audio=file_path,
                         caption=caption,
                         thumb=ph_path,

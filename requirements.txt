@@ -10,5 +10,4 @@ psutil
 humanize
 pyromod==3.0.0
 ffmpeg-python
-python-dotenv
 python-dateutil
