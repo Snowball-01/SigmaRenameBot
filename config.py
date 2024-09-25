@@ -15,7 +15,7 @@ class Config(object):
 
     # other configs
     BOT_UPTIME  = time.time()
-    PICS = os.environ.get("PICS", "https://telegra.ph/file/13c2745dcd19887d76812.jpg https://telegra.ph/file/e170c2bc5c1429e65f1ca.jpg https://telegra.ph/file/c65f5b8efd59c929b1e8b.jpg https://telegra.ph/file/8fcb3154d71285cd7af20.jpg h>
+    PICS = os.environ.get("PICS", "https://telegra.ph/file/13c2745dcd19887d76812.jpg https://telegra.ph/file/e170c2bc5c1429e65f1ca.jpg https://telegra.ph/file/c65f5b8efd59c929b1e8b.jpg https://telegra.ph/file/8fcb3154d71285cd7af20.jpg https://telegra.ph/file/099ad55fdc723a058e12f.jpg https://telegra.ph/file/8977b1767518b6bf31312.jpg https://telegra.ph/file/52d7fc0a599a2c9b521bd.jpg").split()
     ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6065594762').split()] # ⚠️ Required
     FORCE_SUB   = os.environ.get("FORCE_SUB", "Kdramalanad") # ⚠️ Required Username without @
     LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1001971176803")) # ⚠️ Required must start with (-100)
