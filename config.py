@@ -5,23 +5,23 @@ id_pattern = re.compile(r'^.\d+$')
 
 class Config(object):
     # pyro client config
-    API_ID    = os.environ.get("API_ID", "") # ⚠️ Required
-    API_HASH  = os.environ.get("API_HASH", "") # ⚠️ Required
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "") # ⚠️ Required
+    API_ID    = os.environ.get("API_ID", "21508774") # ⚠️ Required
+    API_HASH  = os.environ.get("API_HASH", "970a0c33fc5a27e835c31ec7811e0090") # ⚠️ Required
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "6480471455:AAHBcLYm50sDryvidVduA2mtOqicSf0JAdo") # ⚠️ Required
 
     # database config
-    DB_NAME = os.environ.get("DB_NAME","")     
-    DB_URL  = os.environ.get("DB_URL","") # ⚠️ Required
- 
+    DB_NAME = os.environ.get("DB_NAME","SnowyRename")
+    DB_URL  = os.environ.get("DB_URL","mongodb+srv://TesterSnowBot:TesterSnowBot@cluster0.wp5hmpy.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0") # ⚠️ Required
+
     # other configs
     BOT_UPTIME  = time.time()
-    PICS = os.environ.get("PICS", "https://telegra.ph/file/13c2745dcd19887d76812.jpg https://telegra.ph/file/e170c2bc5c1429e65f1ca.jpg https://telegra.ph/file/c65f5b8efd59c929b1e8b.jpg https://telegra.ph/file/8fcb3154d71285cd7af20.jpg https://telegra.ph/file/099ad55fdc723a058e12f.jpg https://telegra.ph/file/8977b1767518b6bf31312.jpg https://telegra.ph/file/52d7fc0a599a2c9b521bd.jpg").split()
-    ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '').split()] # ⚠️ Required
-    FORCE_SUB   = os.environ.get("FORCE_SUB", "") # ⚠️ Required Username without @
-    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "")) # ⚠️ Required must start with (-100)
+    PICS = os.environ.get("PICS", "https://telegra.ph/file/13c2745dcd19887d76812.jpg https://telegra.ph/file/e170c2bc5c1429e65f1ca.jpg https://telegra.ph/file/c65f5b8efd59c929b1e8b.jpg https://telegra.ph/file/8fcb3154d71285cd7af20.jpg h>
+    ADMIN       = [int(admin) if id_pattern.search(admin) else admin for admin in os.environ.get('ADMIN', '6065594762').split()] # ⚠️ Required
+    FORCE_SUB   = os.environ.get("FORCE_SUB", "Kdramalanad") # ⚠️ Required Username without @
+    LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "-1001971176803")) # ⚠️ Required must start with (-100)
     PREMIUM = os.environ.get("PREMIUM", True)
-    
-    # wes response configuration     
+
+    # wes response configuration
     WEBHOOK = os.environ.get("WEBHOOK", False)
 
 
