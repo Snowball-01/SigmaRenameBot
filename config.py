@@ -35,8 +35,6 @@ class Txt(object):
 ➻ ** Using This Bot You Can Auto Rename Of Your Files. **
     
 ➻ ** This Bot Also Supports Custom Thumbnail And Custom Caption. **
-    
-➻ ** Use /tutorial Command To Know How To Use Me. **
 """
     
     FILE_NAME_TXT = """<b><u>SETUP AUTO RENAME FORMAT</u></b>
