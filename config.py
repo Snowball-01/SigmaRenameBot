@@ -74,7 +74,7 @@ Use These Keywords To Setup Custom File Name
 ➥ Lᴀɴɢᴜᴀɢᴇ: <a href=https://www.python.org>Pyᴛʜᴏɴ 3</a>
 ➥ Dᴀᴛᴀ Bᴀꜱᴇ: <a href=https://cloud.mongodb.com>Mᴏɴɢᴏ DB</a>
 ➥ ᴍʏ ꜱᴇʀᴠᴇʀ : <a href=https://dashboard.heroku.com>Heroku</a>
-➥ ᴠᴇʀsɪᴏɴ : v2.0.0
+➥ ᴠᴇʀsɪᴏɴ : v3.0.0
 </b>
 """
 
@@ -153,4 +153,5 @@ Hᴇʏ {},
 📥 Fᴏʀ Hᴇʟᴘ Cᴏɴᴛ. @Snowball_Official
 """
 
-
+class temp(object):
+    TEMPLATE_CHANNELS = {}

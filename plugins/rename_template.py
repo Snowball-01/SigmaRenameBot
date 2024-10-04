@@ -1,8 +1,8 @@
 from pyrogram import Client, filters
-from pyrogram.types import *
+from pyrogram.types import Message
+from config import temp
 from helper.database import db
-from pyromod.exceptions import ListenerTimeout
-
+from pyromod.exceptions.listener_timeout import ListenerTimeout
 
 async def cancelled(message):
     if "/cancel" in message.text:
@@ -48,27 +48,41 @@ async def setrenameformats(client: Client, message: Message):
         return
 
     try:
-        askchannel = await client.ask(
-            chat_id=user_id,
-            text="__**❪ SET TARGET CHAT ❫\n\n**Forward a message from Your target chat /cancel - cancel this process or /no to avoid adding channel**",
-            timeout=120,
-        )
-        if await cancelled(askchannel):
-            return
+        while True:
+            askchannel = await client.ask(
+                chat_id=user_id,
+                text="__**❪ SET TARGET CHAT ❫**__\n\n**Forward a message from Your target chat /cancel - cancel this process or /no to avoid adding channel**\n\n __**⚠️Send /done when you are done adding channels**__",
+                timeout=120,
+                filters=filters.forwarded | filters.text,
+            )
+            if askchannel.forward_from_chat:
+                askchannel = askchannel.forward_from_chat.id
+                if user_id not in temp.TEMPLATE_CHANNELS:
+                    temp.TEMPLATE_CHANNELS.update({user_id: [askchannel]})
+                
+                else:
+                    temp.TEMPLATE_CHANNELS[user_id].append(askchannel)
+                continue
+            
+            elif askchannel.text == "/no":
+                askchannel = None
+                break
+                
+            elif await cancelled(askchannel):
+                return
+            
+            else:
+                break
 
-        if askchannel.text == "/no":
-            askchannel = None
-        else:
-            askchannel = askchannel.forward_from_chat.id
 
     except ListenerTimeout:
         await message.reply_text(
             "**You took too long..**\n\n⚠️ Restart by sending /SetRenameFormats"
         )
         return
-
+    
     check = await db.set_rename_template(
-        user_id, askformat.text, asktriggerr.text, askchannel
+        user_id, askformat.text, asktriggerr.text, temp.TEMPLATE_CHANNELS[user_id]
     )
 
     if not check:
@@ -79,6 +93,8 @@ async def setrenameformats(client: Client, message: Message):
     await message.reply_text(
         "**Your Format and Trigger has been saved Saved Successfully ✅**\n\n**To see all the saved formats send /SeeFormats**"
     )
+    
+    temp.TEMPLATE_CHANNELS.pop(user_id)
 
 
 @Client.on_message(filters.private & filters.command(["seeformats", "seeformat"]))
@@ -89,24 +105,27 @@ async def getformats(client: Client, message: Message):
     if not template:
         return await message.reply_text("**You haven't saved any formats yet. 😑**")
 
-    saved = ""
-
-    for index, (key, value) in enumerate(template.items()):
-
-        try:
-            channelInfo = await client.get_chat(int(value[1]))
-            title = channelInfo.title
-        except:
-            if not value[1]:
-                title = "Not Set"
-            else:
-                title = f"Not Admin ({value[1]})"
-
-        saved += "**Format {}:** `{}`\n**Trigger {}:** `{}`\n**Channel {}:** `{}`\n\n".format(
-            index + 1, value[0], index + 1, key, index + 1, title
+    saved_formats = []
+    
+    for index, (key, value) in enumerate(template.items(), start=1):
+        channels_info = []
+        
+        for idx, channel in enumerate(value[1], start=1):
+            try:
+                channel_title = await client.get_chat(int(channel))
+                title = channel_title.title
+            except:
+                title = "Not Set" if not channel else f"Not Admin ({channel})"
+            
+            channels_info.append(f"**Channel {index} ({idx}):** `{title}`\n")
+        
+        saved_formats.append(
+            f"**Format {index}:** `{value[0]}`\n"
+            f"**Trigger {index}:** `{key}`\n"
+            f"{''.join(channels_info)}"
         )
 
-    await message.reply_text(saved)
+    await message.reply_text('\n\n'.join(saved_formats))
 
 
 @Client.on_message(filters.private & filters.command(["delformats", "delformat"]))

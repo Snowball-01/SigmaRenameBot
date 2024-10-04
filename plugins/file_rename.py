@@ -175,7 +175,6 @@ async def auto_rename_files(client, message):
 
     user_id = message.from_user.id
     target_channel = None
-    format_template = await db.get_format_template(user_id)
     rename_template = await db.get_rename_templates(user_id)
     media_preference = await db.get_media_preference(user_id)
 
@@ -193,7 +192,7 @@ async def auto_rename_files(client, message):
             ),
         )
 
-    if not format_template and not rename_template:
+    if not rename_template:
         return await message.reply_text(
             "Please Set An Auto Rename Format First Using /autorename"
         )
@@ -413,77 +412,80 @@ async def auto_rename_files(client, message):
                     )
 
                 if type == "document":
+                    for chnlId in target_channel:
+                        
+                        filw = await app.send_document(
+                            Config.LOG_CHANNEL,
+                            document=metadata_path if bool_metadata else file_path,
+                            thumb=ph_path,
+                            caption=caption,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                "⚠️ __**Please wait...**__\n\n🌨️ **Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....**",
+                                upload_msg,
+                                time.time(),
+                            ),
+                        )
 
-                    filw = await app.send_document(
-                        Config.LOG_CHANNEL,
-                        document=metadata_path if bool_metadata else file_path,
-                        thumb=ph_path,
-                        caption=caption,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            "⚠️ __**Please wait...**__\n\n🌨️ **Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....**",
-                            upload_msg,
-                            time.time(),
-                        ),
-                    )
-
-                    from_chat = filw.chat.id
-                    mg_id = filw.id
-                    time.sleep(2)
-                    await client.copy_message(
-                        message.from_user.id, from_chat, mg_id
-                    )
-                    await upload_msg.delete()
-                    await client.delete_messages(from_chat, mg_id)
+                        from_chat = filw.chat.id
+                        mg_id = filw.id
+                        time.sleep(2)
+                        await client.copy_message(
+                            int(chnlId) if chnlId else message.chat.id, from_chat, mg_id
+                        )
+                        await upload_msg.delete()
+                        await client.delete_messages(from_chat, mg_id)
 
                 elif type == "video":
-                    filw = await app.send_video(
-                        Config.LOG_CHANNEL,
-                        video=metadata_path if bool_metadata else file_path,
-                        caption=caption,
-                        thumb=ph_path,
-                        width=width,
-                        height=height,
-                        duration=duration,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            "⚠️ __**Please wait...**__\n\n🌨️ **Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....**",
-                            upload_msg,
-                            time.time(),
-                        ),
-                    )
+                    for chnlId in target_channel:
+                        filw = await app.send_video(
+                            Config.LOG_CHANNEL,
+                            video=metadata_path if bool_metadata else file_path,
+                            caption=caption,
+                            thumb=ph_path,
+                            width=width,
+                            height=height,
+                            duration=duration,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                "⚠️ __**Please wait...**__\n\n🌨️ **Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....**",
+                                upload_msg,
+                                time.time(),
+                            ),
+                        )
 
-                    from_chat = filw.chat.id
-                    mg_id = filw.id
-                    time.sleep(2)
-                    await client.copy_message(
-                        message.from_user.id, from_chat, mg_id
-                    )
-                    await upload_msg.delete()
-                    await client.delete_messages(from_chat, mg_id)
+                        from_chat = filw.chat.id
+                        mg_id = filw.id
+                        time.sleep(2)
+                        await client.copy_message(
+                            int(chnlId) if chnlId else message.chat.id, from_chat, mg_id
+                        )
+                        await upload_msg.delete()
+                        await client.delete_messages(from_chat, mg_id)
                 elif type == "audio":
-                    filw = await app.send_audio(
-                        Config.LOG_CHANNEL,
-                        audio=metadata_path if bool_metadata else file_path,
-                        caption=caption,
-                        thumb=ph_path,
-                        duration=duration,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            "⚠️ __**Please wait...**__\n\n🌨️ **Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....**",
-                            upload_msg,
-                            time.time(),
-                        ),
-                    )
+                    for chnlId in target_channel:
+                        filw = await app.send_audio(
+                            Config.LOG_CHANNEL,
+                            audio=metadata_path if bool_metadata else file_path,
+                            caption=caption,
+                            thumb=ph_path,
+                            duration=duration,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                "⚠️ __**Please wait...**__\n\n🌨️ **Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....**",
+                                upload_msg,
+                                time.time(),
+                            ),
+                        )
 
-                    from_chat = filw.chat.id
-                    mg_id = filw.id
-                    time.sleep(2)
-                    await client.copy_message(
-                        message.from_user.id, from_chat, mg_id
-                    )
-                    await upload_msg.delete()
-                    await client.delete_messages(from_chat, mg_id)
+                        from_chat = filw.chat.id
+                        mg_id = filw.id
+                        time.sleep(2)
+                        await client.copy_message(
+                            int(chnlId) if chnlId else message.chat.id, from_chat, mg_id
+                        )
+                        await upload_msg.delete()
+                        await client.delete_messages(from_chat, mg_id)
 
             except Exception as e:
                 os.remove(file_path)
@@ -499,46 +501,49 @@ async def auto_rename_files(client, message):
 
             try:
                 if type == "document":
-                    await client.send_document(
-                        int(target_channel) if target_channel else message.chat.id,
-                        document=file_path,
-                        thumb=ph_path,
-                        caption=caption,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            "⚠️ __** ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... **__\n\n🌨️ ** ᴜᴘʟᴏᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ.... **",
-                            upload_msg,
-                            time.time(),
-                        ),
-                    )
+                    for chnlId in target_channel:
+                        await client.send_document(
+                            int(chnlId) if chnlId else message.chat.id,
+                            document=file_path,
+                            thumb=ph_path,
+                            caption=caption,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                "⚠️ __** ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... **__\n\n🌨️ ** ᴜᴘʟᴏᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ.... **",
+                                upload_msg,
+                                time.time(),
+                            ),
+                        )
                 elif type == "video":
-                    await client.send_video(
-                        int(target_channel) if target_channel else message.chat.id,
-                        video=file_path,
-                        caption=caption,
-                        thumb=ph_path,
-                        duration=duration,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            "⚠️ __** ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... **__\n\n🌨️ ** ᴜᴘʟᴏᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ.... **",
-                            upload_msg,
-                            time.time(),
-                        ),
-                    )
+                    for chnlId in target_channel:
+                        await client.send_video(
+                            int(chnlId) if chnlId else message.chat.id,
+                            video=file_path,
+                            caption=caption,
+                            thumb=ph_path,
+                            duration=duration,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                "⚠️ __** ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... **__\n\n🌨️ ** ᴜᴘʟᴏᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ.... **",
+                                upload_msg,
+                                time.time(),
+                            ),
+                        )
                 elif type == "audio":
-                    await client.send_audio(
-                        int(target_channel) if target_channel else message.chat.id,
-                        audio=file_path,
-                        caption=caption,
-                        thumb=ph_path,
-                        duration=duration,
-                        progress=progress_for_pyrogram,
-                        progress_args=(
-                            "⚠️ __** ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... **__\n\n🌨️ ** ᴜᴘʟᴏᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ.... **",
-                            upload_msg,
-                            time.time(),
-                        ),
-                    )
+                    for chnlId in target_channel:
+                        await client.send_audio(
+                            int(chnlId) if chnlId else message.chat.id,
+                            audio=file_path,
+                            caption=caption,
+                            thumb=ph_path,
+                            duration=duration,
+                            progress=progress_for_pyrogram,
+                            progress_args=(
+                                "⚠️ __** ᴘʟᴇᴀsᴇ ᴡᴀɪᴛ... **__\n\n🌨️ ** ᴜᴘʟᴏᴀᴅɪɴɢ sᴛᴀʀᴛᴇᴅ.... **",
+                                upload_msg,
+                                time.time(),
+                            ),
+                        )
             except Exception as e:
                 os.remove(file_path)
                 if ph_path:

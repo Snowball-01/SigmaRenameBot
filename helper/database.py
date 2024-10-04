@@ -40,7 +40,6 @@ class Database:
                 file_id=None,  # Add this line for the file id
                 caption=None,  # Add this line for the caption
                 autorename=None,  # Add this line for the autorename
-                format_template=None,  # Add this line for the format template
                 media_type="video",  # Add this line for the media type
                 prefix=None,  # Add this line for the prefix
                 suffix=None,  # Add this line for the suffix
@@ -97,15 +96,6 @@ class Database:
     async def get_caption(self, id):
         user = await self.config.find_one({"_id": int(id)})
         return user.get("caption", None)
-
-    async def set_format_template(self, id, format_template):
-        await self.config.update_one(
-            {"_id": int(id)}, {"$set": {"format_template": format_template}}
-        )
-
-    async def get_format_template(self, id):
-        user = await self.config.find_one({"_id": int(id)})
-        return user.get("format_template", None)
 
     async def set_autorename(self, id, autorename):
         await self.config.update_one(
@@ -228,7 +218,7 @@ class Database:
         all_premium_users = self.col.find({"user_type.is_premium": True})
         return all_premium_users
 
-    async def set_rename_template(self, id, rename_format, trigger_word, channel_id):
+    async def set_rename_template(self, id, rename_format, trigger_word, channel_id_array):
     
         user = await self.config.find_one({"_id": int(id)})
         defaultformat = dict(user.get("rename_template", {}))
@@ -236,7 +226,7 @@ class Database:
         if trigger_word.lower() in [key.lower() for key in defaultformat.keys()]:
             return False
 
-        defaultformat.update({trigger_word: [rename_format, channel_id]})
+        defaultformat.update({trigger_word: [rename_format, channel_id_array]})
 
         await self.config.update_one(
             {"_id": int(id)}, {"$set": {"rename_template": defaultformat}}
