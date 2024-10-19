@@ -117,7 +117,7 @@ async def getformats(client: Client, message: Message):
 
         for idx, channel in enumerate(value[1], start=1):
             if value[1] is None:
-                channels_info.append(f"**Channel :** Not Set")
+                channels_info.append(f"**Channel :** Not Set\n")
             else:
                 try:
                     channel_title = await client.get_chat(int(channel))
@@ -125,7 +125,7 @@ async def getformats(client: Client, message: Message):
                 except:
                     title = "Not Set" if not channel else f"Not Admin ({channel})"
 
-                channels_info.append(f"**Channel {index} ({idx}):** `{title}`")
+                channels_info.append(f"**Channel {index} ({idx}):** `{title}`\n")
 
         saved_formats.append(
             f"**Format {index}:** `{value[0]}`\n"
