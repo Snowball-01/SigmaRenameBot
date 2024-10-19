@@ -144,7 +144,7 @@ async def getformats(client: Client, message: Message):
         with open(
             f"{message.from_user.first_name}_formats.txt", "w", encoding="utf-8"
         ) as f:
-            f.write("\n\n".join(saved_formats))
+            f.write("\n".join(saved_formats))
         await message.reply_document(f"{message.from_user.first_name}_formats.txt")
         await s.delete()
         os.remove(f"{message.from_user.first_name}_formats.txt")
