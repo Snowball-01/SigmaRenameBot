@@ -1,3 +1,4 @@
+import os
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from config import temp
@@ -132,7 +133,21 @@ async def getformats(client: Client, message: Message):
             f"{''.join(channels_info)}"
         )
 
-    await message.reply_text("\n\n".join(saved_formats))
+    try:
+
+        await message.reply_text("\n\n".join(saved_formats))
+
+    except:
+        s = await message.reply_text(
+            "**Please Wait...**", reply_to_message_id=message.id
+        )
+        with open(
+            f"{message.from_user.first_name}_formats.txt", "w", encoding="utf-8"
+        ) as f:
+            f.write("\n\n".join(saved_formats))
+        await message.reply_document(f"{message.from_user.first_name}_formats.txt")
+        await s.delete()
+        os.remove(f"{message.from_user.first_name}_formats.txt")
 
 
 @Client.on_message(filters.private & filters.command(["delformats", "delformat"]))
