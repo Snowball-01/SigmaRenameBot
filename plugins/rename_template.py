@@ -75,6 +75,8 @@ async def setrenameformats(client: Client, message: Message):
                 return
 
             else:
+                if user_id not in temp.TEMPLATE_CHANNELS:
+                    temp.TEMPLATE_CHANNELS.update({user_id: [None]})
                 break
 
     except ListenerTimeout:
