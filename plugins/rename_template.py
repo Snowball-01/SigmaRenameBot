@@ -135,7 +135,7 @@ async def getformats(client: Client, message: Message):
 
     try:
 
-        await message.reply_text("\n\n".join(saved_formats))
+        await message.reply_text("\n".join(saved_formats))
 
     except:
         s = await message.reply_text(
