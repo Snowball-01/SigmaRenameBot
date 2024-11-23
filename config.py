@@ -7,7 +7,7 @@ class Config(object):
     # pyro client config
     API_ID    = os.environ.get("API_ID", "21508774") # ⚠️ Required
     API_HASH  = os.environ.get("API_HASH", "970a0c33fc5a27e835c31ec7811e0090") # ⚠️ Required
-    BOT_TOKEN = os.environ.get("BOT_TOKEN", "6480471455:AAEer5smTUOUj8AuTDxsh45ns5Y1VbS--5s") # ⚠️ Required
+    BOT_TOKEN = os.environ.get("BOT_TOKEN", "6480471455:AAETTfVpa6w2ll1aUSxTUXtYlH7X5ss4_Yc") # ⚠️ Required
 
     # database config
     DB_NAME = os.environ.get("DB_NAME","SnowyRename")
